@@ -1,0 +1,27 @@
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  inventory:
+    build: ./inventory
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  payment:
+    build: ./payment
+    ports:
+      - "8001:8000"
+    depends_on:
+      - redis
+      - inventory
+
+  notification:
+    build: ./notification
+    depends_on:
+      - redis
+    env_file:
+      - ./notification/.env
